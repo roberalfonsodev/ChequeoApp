@@ -11,16 +11,36 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 
   <link rel="stylesheet" href="css/styleapp.css">
+  <link rel="stylesheet" href="css/splash.css">
+
+    <!-- Manifest y metadatos PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#b94a3e">
+
+  <!-- iOS soporte -->
+  <link rel="apple-touch-icon" href="img/logo-chequeoapp.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ChequeoApp">
+
 </head>
 
 <body>
   <div class="container">
 
     <header>
-      <div class="container-titulo">  
-        <img class="logo-app" src="img/logo-chequeoapp.png" alt="">
-        <h1>CHEQUEO APP</h1>
+            <!-- Pantalla splash -->
+      <div id="splash-screen" class="splash-screen">
+        <img class="logo-app" src="img/logo-chequeoapp.png" alt="ChequeoApp Logo">
+        <h1>ChequeoApp</h1>
       </div>
+
+            <!-- encabezado de la app -->
+      <div class="container-titulo">
+        <img class="logo-app" src="img/logo-chequeoapp.png" alt="ChequeoApp Logo">
+        <h1>ChequeoApp</h1>
+      </div>
+
       <h2>App para realizar un chequeo de pruebas de velocidad individuales</h2>
     </header>
 
@@ -102,5 +122,30 @@
 
   <script src="script/scriptapp.js">
   </script>
+
+  <!-- Registro del Service Worker -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/service-worker.js')
+      .then(reg => console.log('✅ Service Worker registrado:', reg.scope))
+      .catch(err => console.log('❌ Error al registrar el SW:', err));
+  });
+}
+</script>
+
+<!-- Script para ocultar splash -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(() => {
+    document.getElementById("splash-screen").style.opacity = 0;
+    setTimeout(() => document.getElementById("splash-screen").style.display = "none", 500);
+  }, 1800); // duración visible 1.8 segundos
+});
+</script>
+
+
+
 </body>
 </html>
