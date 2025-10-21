@@ -127,57 +127,56 @@ function generatePDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
-  // --- LOGO ---
   const img = new Image();
   img.src = "img/favicon-logo-chequeoapp.png";
 
-  img.onload = function() {
-    // Dibuja el logo en el PDF
+  img.onload = function () {
+    // --- LOGO ---
     doc.addImage(img, "PNG", 15, 10, 15, 15);
 
     // --- ENCABEZADO ---
-    doc.setFont('helvetica', 'bold');
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
     doc.setTextColor(185, 74, 62);
-    doc.text('ChequeoApp', 105, 20, { align: 'center' });
+    doc.text("ChequeoApp", 105, 20, { align: "center" });
     doc.setFontSize(14);
-    doc.text('CHEQUEO DE PRUEBA DE VELOCIDAD INDIVIDUAL', 105, 30, { align: 'center' });
+    doc.text("CHEQUEO DE PRUEBA DE VELOCIDAD INDIVIDUAL", 105, 30, { align: "center" });
 
     // --- INFO ---
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
     const today = new Date();
-    const fechaTexto = today.toLocaleDateString('es-ES');
-    const fechaArchivo = today.toISOString().split('T')[0]; // formato yyyy-mm-dd
+    const fechaTexto = today.toLocaleDateString("es-ES");
+    const fechaArchivo = today.toISOString().split("T")[0];
     doc.text(`Fecha: ${fechaTexto}`, 20, 45);
-    doc.text('App desarrollada por: Dubin Roberto Alfonso', 20, 52);
+    doc.text("App desarrollada por: Dubin Roberto Alfonso", 20, 52);
 
     // --- TABLA ---
-    const tableColumn = ['Posición', 'Nombre', 'Tiempo (s)'];
+    const tableColumn = ["Posición", "Nombre", "Tiempo (s)"];
     const tableRows = athletes.map((a, i) => [i + 1, a.name, a.time.toFixed(3)]);
 
     doc.autoTable({
       head: [tableColumn],
       body: tableRows,
       startY: 60,
-      theme: 'grid',
+      theme: "grid",
       styles: {
         fontSize: 10,
-        textColor: [18, 27, 34], // texto general oscuro
-        lineColor: [18, 27, 34], // bordes
+        textColor: [18, 27, 34],
+        lineColor: [18, 27, 34],
         lineWidth: 0.2
       },
       headStyles: {
-        fillColor: [185, 74, 62],  // rojo industrial brick
-        textColor: [255, 255, 255], // blanco
-        fontStyle: 'bold'
+        fillColor: [185, 74, 62],
+        textColor: [255, 255, 255],
+        fontStyle: "bold"
       },
       alternateRowStyles: {
-        fillColor: [32, 66, 84],   // azul metálico
-        textColor: [255, 255, 255] // texto blanco para contraste
+        fillColor: [32, 66, 84],
+        textColor: [255, 255, 255]
       },
       bodyStyles: {
-        fillColor: [232, 236, 239], // gris azulado claro
+        fillColor: [232, 236, 239],
         textColor: [18, 27, 34]
       },
       columnStyles: {
@@ -194,32 +193,46 @@ function generatePDF() {
 
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
-
-      // Línea separadora
       doc.setDrawColor(180, 180, 180);
       doc.line(15, 280, 195, 280);
 
-      // Texto del pie
       doc.text("Desarrollado por: Dubin Roberto Alfonso", 15, 286);
       doc.text("Correo: dubinalfonso29@gmail.com", 15, 291);
       doc.text("© 2025 alfonsodev - Todos los derechos reservados", 15, 296);
 
-      // WhatsApp y enlaces
       doc.setTextColor(0, 153, 51);
       doc.textWithLink("WhatsApp: +57 312 689 1937", 150, 286, { url: "https://wa.me/573126891937" });
-
-      doc.setTextColor(36, 92, 178);
-      
 
       doc.setTextColor(100, 100, 100);
       doc.text(`Página ${i} de ${pageCount}`, 195, 308, { align: "right" });
     }
 
-    // --- GUARDAR CON NOMBRE ÚNICO ---
+    // --- CREAR PDF COMO BLOB ---
     const nombreArchivo = `reporte_chequeovelocidad_${fechaArchivo}.pdf`;
-    doc.save(nombreArchivo);
+    const pdfBlob = doc.output("blob");
+    const pdfFile = new File([pdfBlob], nombreArchivo, { type: "application/pdf" });
+
+    // --- COMPARTIR EN WHATSAPP / OTROS ---
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Reporte ChequeoApp",
+          text: "Aquí tienes el reporte del test de velocidad individual 🏁",
+          files: [pdfFile]
+        })
+        .then(() => console.log("✅ Compartido correctamente"))
+        .catch((error) => console.log("❌ Error al compartir:", error));
+    } else {
+      // Si no soporta compartir, se descarga directamente
+      doc.save(nombreArchivo);
+    }
+  };
+
+  img.onerror = function () {
+    showError("No se pudo cargar el logo para el PDF.");
   };
 }
+
 
 
 
