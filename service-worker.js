@@ -1,13 +1,13 @@
 const CACHE_NAME = "chequeoapp-v3";
 const urlsToCache = [
-  "/",
-  "/index.html",
-  "/css/styleapp.css",
-  "/css/splash.css",
-  "/js/scriptapp.js",
-  "/img/logo-chequeoapp.png",
-  "/img/favicon-logo-chequeoapp.png",
-  "/img/splash-512x512.png"
+  "./",
+  "./index.html",
+  "./css/styleapp.css",
+  "./css/splash.css",
+  "./js/scriptapp.js",
+  "./img/logo-chequeoapp.png",
+  "./img/favicon-logo-chequeoapp.png",
+  "./img/splash-512x512.png"
 ];
 
 // Instalar y cachear archivos
