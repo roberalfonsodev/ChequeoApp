@@ -127,72 +127,100 @@ function generatePDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
-  // --- ENCABEZADO ---
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(16);
-  doc.setTextColor(0, 51, 153);
-  doc.text('ChequeoApp', 105, 20, { align: 'center' });
-  doc.setFontSize(14);
-  doc.text('CHEQUEO DE PRUEBA DE VELOCIDAD INDIVIDUAL', 105, 30, { align: 'center' });
+  // --- LOGO ---
+  const img = new Image();
+  img.src = "img/favicon-logo-chequeoapp.png";
 
-  // --- INFO ---
-  doc.setFontSize(10);
-  doc.setTextColor(100, 100, 100);
-  const today = new Date().toLocaleDateString('es-ES');
-  doc.text(`Fecha: ${today}`, 20, 45);
-  doc.text('App desarrollada por: Dubin Roberto Alfonso', 20, 52);
+  img.onload = function() {
+    // Dibuja el logo en el PDF
+    doc.addImage(img, "PNG", 15, 10, 15, 15);
 
-  // --- TABLA ---
-  const tableColumn = ['Posición', 'Nombre', 'Tiempo (s)'];
-  const tableRows = athletes.map((a, i) => [i + 1, a.name, a.time.toFixed(3)]);
+    // --- ENCABEZADO ---
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.setTextColor(185, 74, 62);
+    doc.text('ChequeoApp', 105, 20, { align: 'center' });
+    doc.setFontSize(14);
+    doc.text('CHEQUEO DE PRUEBA DE VELOCIDAD INDIVIDUAL', 105, 30, { align: 'center' });
 
-  doc.autoTable({
-    head: [tableColumn],
-    body: tableRows,
-    startY: 60,
-    theme: 'grid',
-    styles: { fontSize: 10 },
-    headStyles: { fillColor: [59, 130, 246], textColor: 255 },
-    alternateRowStyles: { fillColor: [240, 245, 255] },
-    columnStyles: {
-      0: { cellWidth: 20 },
-      1: { cellWidth: 100 },
-      2: { cellWidth: 40 }
-    }
-  });
-
-  // --- AHORA SÍ, DESPUÉS DE autoTable ---
-  const pageCount = doc.internal.getNumberOfPages();
-  doc.setFontSize(9);
-  doc.setTextColor(100, 100, 100);
-
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i);
-
-    // Línea separadora
-    doc.setDrawColor(180, 180, 180);
-    doc.line(15, 280, 195, 280);
-
-    // Texto del pie
-    doc.text("Desarrollado por: Dubin Roberto Alfonso", 15, 286);
-    doc.text("Correo: dubinalfonso29@gmail.com", 15, 291);
-    doc.text("© 2025 alfonsodev - Todos los derechos reservados", 15, 296);
-
-    // WhatsApp y enlaces
-    doc.setTextColor(0, 153, 51);
-    doc.textWithLink("WhatsApp: +57 312 689 1937", 150, 286, { url: "https://wa.me/573126891937" });
-
-    doc.setTextColor(36, 92, 178);
-    doc.textWithLink("Instagram", 150, 291, { url: "https://www.instagram.com/" });
-    doc.textWithLink("Facebook", 150, 296, { url: "https://www.facebook.com/" });
-    doc.textWithLink("GitHub", 150, 301, { url: "https://github.com/" });
-
+    // --- INFO ---
+    doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
-    doc.text(`Página ${i} de ${pageCount}`, 195, 308, { align: "right" });
-  }
+    const today = new Date();
+    const fechaTexto = today.toLocaleDateString('es-ES');
+    const fechaArchivo = today.toISOString().split('T')[0]; // formato yyyy-mm-dd
+    doc.text(`Fecha: ${fechaTexto}`, 20, 45);
+    doc.text('App desarrollada por: Dubin Roberto Alfonso', 20, 52);
 
-  doc.save('reporte_chequeovelocidad.pdf');
+    // --- TABLA ---
+    const tableColumn = ['Posición', 'Nombre', 'Tiempo (s)'];
+    const tableRows = athletes.map((a, i) => [i + 1, a.name, a.time.toFixed(3)]);
+
+    doc.autoTable({
+      head: [tableColumn],
+      body: tableRows,
+      startY: 60,
+      theme: 'grid',
+      styles: {
+        fontSize: 10,
+        textColor: [18, 27, 34], // texto general oscuro
+        lineColor: [18, 27, 34], // bordes
+        lineWidth: 0.2
+      },
+      headStyles: {
+        fillColor: [185, 74, 62],  // rojo industrial brick
+        textColor: [255, 255, 255], // blanco
+        fontStyle: 'bold'
+      },
+      alternateRowStyles: {
+        fillColor: [32, 66, 84],   // azul metálico
+        textColor: [255, 255, 255] // texto blanco para contraste
+      },
+      bodyStyles: {
+        fillColor: [232, 236, 239], // gris azulado claro
+        textColor: [18, 27, 34]
+      },
+      columnStyles: {
+        0: { cellWidth: 20 },
+        1: { cellWidth: 100 },
+        2: { cellWidth: 40 }
+      }
+    });
+
+    // --- PIE DE PÁGINA ---
+    const pageCount = doc.internal.getNumberOfPages();
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 100);
+
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+
+      // Línea separadora
+      doc.setDrawColor(180, 180, 180);
+      doc.line(15, 280, 195, 280);
+
+      // Texto del pie
+      doc.text("Desarrollado por: Dubin Roberto Alfonso", 15, 286);
+      doc.text("Correo: dubinalfonso29@gmail.com", 15, 291);
+      doc.text("© 2025 alfonsodev - Todos los derechos reservados", 15, 296);
+
+      // WhatsApp y enlaces
+      doc.setTextColor(0, 153, 51);
+      doc.textWithLink("WhatsApp: +57 312 689 1937", 150, 286, { url: "https://wa.me/573126891937" });
+
+      doc.setTextColor(36, 92, 178);
+      
+
+      doc.setTextColor(100, 100, 100);
+      doc.text(`Página ${i} de ${pageCount}`, 195, 308, { align: "right" });
+    }
+
+    // --- GUARDAR CON NOMBRE ÚNICO ---
+    const nombreArchivo = `reporte_chequeovelocidad_${fechaArchivo}.pdf`;
+    doc.save(nombreArchivo);
+  };
 }
+
 
 
     function saveAthletesToStorage() {
