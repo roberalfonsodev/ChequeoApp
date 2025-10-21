@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChequeoApp</title>
+  <link rel="icon" type="image/png" href="img/favicon-logo-chequeoapp.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+
+  <link rel="stylesheet" href="css/styleapp.css">
+</head>
+
+<body>
+  <div class="container">
+
+    <header>
+      <div class="container-titulo">  
+        <img class="logo-app" src="img/logo-chequeoapp.png" alt="">
+        <h1>CHEQUEO APP</h1>
+      </div>
+      <h2>App para realizar un chequeo de pruebas de velocidad individuales</h2>
+    </header>
+
+    <div id="loading-screen" class="hidden">
+      <div class="card text-center py-16">
+        <div class="loader"></div>
+        <p>Procesando información...</p>
+      </div>
+    </div>
+
+    <div id="form-section" class="card">
+      <h3>Ingresar Datos del Deportista</h3>
+      <form id="athlete-form">
+        <label for="name">Nombre del Deportista</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="time">Tiempo (segundos.milisegundos)</label>
+        <input type="text" id="time" name="time" required placeholder="Ej: 25.123" pattern="[0-9]+\.[0-9]{3}">
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Formato: segundos con tres decimales (25.123)</p>
+
+        <div id="error-message" class="error-message hidden"></div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar Deportista</button>
+      </form>
+    </div>
+
+    <div id="records-section" class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3>Registros Ingresados</h3>
+        <div id="records-count" style="font-size:0.9rem; color:var(--text-muted);">0 de 100 registros</div>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nombre</th>
+              <th>Tiempo (s)</th>
+              <th style="text-align:right;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="athletes-table"></tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:1.5rem;">
+        <button id="finish-test-btn" class="btn btn-success" disabled><i class="fas fa-flag-checkered"></i> FINALIZAR TEST</button>
+      </div>
+    </div>
+
+    <div id="results-section" class="card hidden">
+      <h3>Resultados Finales</h3>
+      <ol id="ranking-list" class="ranking-list"></ol>
+
+      <div style="margin-top:1.5rem;">
+        <button id="generate-report-btn" class="btn btn-primary"><i class="fas fa-file-pdf"></i> GENERAR REPORTE</button>
+        <button id="restart-btn" class="btn btn-secondary"><i class="fas fa-redo"></i> REINICIAR</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Desarrollado por: <strong>Dubin Roberto Alfonso</strong></p>
+    <p>Correo: <a href="mailto:dubinalfonso29@gmail.com">dubinalfonso29@gmail.com</a></p>
+    <p>© 2025 <strong>alfonsodev</strong> - Todos los derechos reservados.</p>
+
+    <div style="margin-top:1rem;">
+      <a href="https://wa.me/573126891937" target="_blank" class="whatsapp-btn"><i class="fab fa-whatsapp"></i> Contactar por WhatsApp</a>
+    </div>
+
+    <div style="margin-top:1rem;">
+      <a href="https://www.instagram.com/roberto_en_linea?igsh=MTlldG80eWZ3cG05OA== " target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.facebook.com/share/1A7QDDZ9fH/" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://github.com/roberalfonsodev" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="https://wa.me/573126891937" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    </div>
+  </footer>
+
+
+  <script src="script/scriptapp.js">
+  </script>
+</body>
+</html>
