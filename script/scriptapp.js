@@ -212,7 +212,7 @@ function generatePDF() {
     const pdfBlob = doc.output("blob");
     const pdfFile = new File([pdfBlob], nombreArchivo, { type: "application/pdf" });
 
-    // --- COMPARTIR EN WHATSAPP / OTROS ---
+     //--- COMPARTIR EN WHATSAPP / OTROS ---
     if (navigator.share) {
       navigator
         .share({
@@ -220,11 +220,21 @@ function generatePDF() {
           text: "Aquí tienes el reporte del test de velocidad individual 🏁",
           files: [pdfFile]
         })
-        .then(() => console.log("✅ Compartido correctamente"))
-        .catch((error) => console.log("❌ Error al compartir:", error));
+        .then(() => {
+          console.log("✅ Compartido correctamente");
+          // Add user feedback here
+        })
+        .catch((error) => {
+          console.error("❌ Error al compartir:", error);
+          // Handle error gracefully
+        });
     } else {
-      // Si no soporta compartir, se descarga directamente
-      doc.save(nombreArchivo);
+      try {
+        doc.save(nombreArchivo);
+        console.log("✅ PDF descargado correctamente");
+      } catch (error) {
+        console.error("❌ Error al descargar:", error);
+      }
     }
   };
 
